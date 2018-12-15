@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<job-manifest name="Smoke">
+
+    <outpath value="{OutputDir}"/>
+
+    <execute command='python "{ResourcesDir}/redshiftRender.py"'>
+        <argument>--render_path "{Tool}\Render.exe"</argument>
+        <argument>--scene_path "{ScenesDir}\\Smoke.ma"</argument>
+        <argument>--render_log_path "{OutputDir}\\Smoke.rs.log"</argument>
+        <argument>--output_dir "{OutputDir}"</argument>
+        <argument>--output_img_dir "{OutputDir}\\img"</argument>
+        <argument>--output_file_name Smoke.rs</argument>
+        <argument>--output_file_ext png</argument>
+    </execute>
+
+    <execute command='python "{ResourcesDir}\\convertScene.py"'>
+        <argument>--original_scene "{ScenesDir}\\Smoke.ma"</argument>
+        <argument>--converted_scene "{OutputDir}\\Smoke.converted.ma"</argument>
+    </execute>
+
+    <execute command='python "{ResourcesDir}/rprRender.py"'>
+        <argument>--render_path "{Tool}\Render.exe"</argument>
+        <argument>--scene_path "{OutputDir}\\Smoke.converted.ma"</argument>
+        <argument>--render_log_path "{OutputDir}\\Smoke.rpr.log"</argument>
+        <argument>--output_dir "{OutputDir}"</argument>
+        <argument>--output_img_dir "{OutputDir}\\img"</argument>
+        <argument>--output_file_name Smoke.rpr</argument>
+        <argument>--output_file_ext png</argument>
+    </execute>
+
+</job-manifest>
