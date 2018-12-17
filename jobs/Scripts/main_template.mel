@@ -30,8 +30,6 @@ global proc prerender(string $scene, int $rpr_iter){{
         loadPlugin redshift4maya;
     }}
 
-    lookThru camera1;
-
     auto_launch();
 
 	setAttr "defaultRenderGlobals.currentRenderer" -type "string" "FireRender";

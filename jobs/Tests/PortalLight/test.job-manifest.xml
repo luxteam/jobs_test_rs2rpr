@@ -9,7 +9,7 @@
         <argument>--scene_path "{ScenesDir}\\Lights\\PortalLight"</argument>
         <argument>--output_dir "{OutputDir}"</argument>
         <argument>--output_img_dir "{OutputDir}\\Color"</argument>
-        <argument>--output_file_ext png</argument>
+        <argument>--output_file_ext jpg</argument>
     </execute>
 
     <execute command='python "{ResourcesDir}\\rprRender.py"'>
