@@ -3,80 +3,110 @@ import sys
 import os
 import subprocess
 import psutil
+import ctypes
+import pyscreenshot
 import json
+import shutil
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir)))
 from jobs_launcher.core.config import main_logger
 
 
+def get_windows_titles():
+    EnumWindows = ctypes.windll.user32.EnumWindows
+    EnumWindowsProc = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.POINTER(ctypes.c_int), ctypes.POINTER(ctypes.c_int))
+    GetWindowText = ctypes.windll.user32.GetWindowTextW
+    GetWindowTextLength = ctypes.windll.user32.GetWindowTextLengthW
+    IsWindowVisible = ctypes.windll.user32.IsWindowVisible
+
+    titles = []
+
+    def foreach_window(hwnd, lParam):
+        if IsWindowVisible(hwnd):
+            length = GetWindowTextLength(hwnd)
+            buff = ctypes.create_unicode_buffer(length + 1)
+            GetWindowText(hwnd, buff, length + 1)
+            titles.append(buff.value)
+        return True
+
+    EnumWindows(EnumWindowsProc(foreach_window), 0)
+
+    return titles
+
+
 def createArgsParser():
     parser = argparse.ArgumentParser()
-
+    parser.add_argument('--tests_list', required=True, metavar="<path>")
     parser.add_argument('--render_path', required=True, metavar="<path>")
     parser.add_argument('--scene_path', required=True, metavar="<path")
-    parser.add_argument('--render_log_path', required=True)
     parser.add_argument('--output_dir', required=True)
     parser.add_argument('--output_img_dir', required=True)
-    parser.add_argument('--output_file_name', required=True)
     parser.add_argument('--output_file_ext', required=True)
-    return parser
+    return parser.parse_args()
 
 
-def main(args, report):
+def main():
+    args = createArgsParser()
 
-    if not os.path.exists(args.scene_path):
-        main_logger.error("Can't found converted scene")
-        report['test_status'] = 'error'
-        return 1, report
-    if not os.path.exists(args.output_dir):
-        main_logger.error("Wasn't found work dir")
-        report['test_status'] = 'error'
-        return 1, report
+    tests_list = {}
+    tests = ""
+    with open(args.tests_list, 'r') as file:
+        tests_list = json.loads(file.read())
+
+    for test in tests_list:
+        if test['status'] == 'active':
+            tests += """prerender("{}", 300);\n""".format(test['name'])
+
+    with open(os.path.join(os.path.dirname(__file__), 'main_template.mel'), 'r') as file:
+        mel_script = file.read().format(tests=tests, work_dir=args.output_dir.replace('\\', '/'), res_path=args.scene_path.replace('\\', '/'))
+
+    with open(os.path.join(args.output_dir, 'script.mel'), 'w') as file:
+        file.write(mel_script)
+
+    shutil.copyfile(os.path.join(os.path.dirname(__file__), 'convertRS2RPR.mel'), os.path.join(args.output_dir, 'convertRS2RPR.mel'))
 
     cmd_script = """
-    set PATH="C:\\Program Files\\Autodesk\\Maya2018\\bin";%PATH%
-    set MAYA_RENDER_DESC_PATH="C:\\Program Files\\AMD\\RadeonProRenderPlugins\\Maya\\renderDesc";%MAYA_RENDER_DESC_PATH%
-    "{render_path}" -r FireRender -log "{render_log_path}" -rd "{output_img_dir}" -im {output_file_name} -of {output_file_ext} "{scene_path}"
-    """.format(**vars(args))
+    set MAYA_CMD_FILE_OUTPUT=%cd%/renderTool.log 
+	set MAYA_SCRIPT_PATH=%cd%;%MAYA_SCRIPT_PATH%
+	"{}" -command "source script.mel; evalDeferred -lp (main());"
+    """.format(args.render_path)
 
     cmd_script_path = os.path.join(args.output_dir, 'renderRPR.bat')
 
     try:
         with open(cmd_script_path, 'w') as file:
             file.write(cmd_script)
-        with open(args.render_log_path, 'w') as file:
-            pass
+        # with open(args.render_log_path, 'w') as file:
+        #     pass
     except OSError as err:
-        report['test_status'] = 'error'
         main_logger.error(str(err))
-        return 1, report
+        return 1
     else:
         rc = -1
         os.chdir(args.output_dir)
         p = psutil.Popen(cmd_script_path, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = p.communicate()
 
-        try:
-            rc = p.wait()
-        except psutil.TimeoutExpired as err:
-            rc = -1
-            for child in reversed(p.children(recursive=True)):
-                child.terminate()
-            p.terminate()
-        else:
-            report['test_status'] = 'passed'
+        while True:
+            try:
+                rc = p.wait(timeout=5)
+            except psutil.TimeoutExpired as err:
+                fatal_errors_titles = ['maya', 'Student Version File', 'Radeon ProRender Error', 'Script Editor']
+                if set(fatal_errors_titles).intersection(get_windows_titles()):
+                    rc = -1
+                    try:
+                        error_screen = pyscreenshot.grab()
+                        error_screen.save(os.path.join(args.output_dir, 'error_screenshot.jpg'))
+                    except:
+                        pass
+                    for child in reversed(p.children(recursive=True)):
+                        child.terminate()
+                    p.terminate()
+                    break
+            else:
+                break
 
-        return rc, report
+        return rc
 
 
 if __name__ == "__main__":
-    args = createArgsParser().parse_args()
-    report = {}
-    if not os.path.exists(os.path.join(args.output_dir, 'report.json')):
-        exit(1)
-    with open(os.path.join(args.output_dir, 'report.json'), 'r+') as file:
-        report = json.loads(file.read())
-    rc, report = main(args, report)
-    report['rpr_render_log'] = args.render_log_path
-    with open(os.path.join(args.output_dir, 'report_compare.json'), 'w') as file:
-        json.dump(report, file, indent=4)
-    exit(rc)
+    exit(main())

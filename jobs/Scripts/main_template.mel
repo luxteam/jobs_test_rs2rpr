@@ -1,0 +1,60 @@
+source convertRS2RPR.mel;
+
+global proc rpr_render(string $scene){{
+
+	optionVar -rm "RPR_DevicesSelected";
+	optionVar -iva "RPR_DevicesSelected" 1;
+
+	fireRender -waitForItTwo;
+	renderIntoNewWindow render;
+	sysFile -makeDir ("{work_dir}" + "/Color");
+	string $ff = "{work_dir}" + "/Color/converted_" + $scene;
+	renderWindowEditor -edit  -dst "color" renderView;
+	renderWindowEditor -edit -com -writeImage $ff renderView;
+}}
+
+global proc prerender(string $scene, int $rpr_iter){{
+
+	string $scene_name  = `file -q -sn -shn`;
+	if ($scene_name != $scene) {{
+		if (catch (`file -f -options "v=0;"  -ignoreVersion -o $scene`) == "1") {{
+            evalDeferred("quit -abort");
+        }}
+	}}
+
+	if( `pluginInfo -query -loaded RadeonProRender` == 0){{
+        loadPlugin RadeonProRender;
+    }}
+
+    if( `pluginInfo -query -loaded redshift4maya` == 0){{
+        loadPlugin redshift4maya;
+    }}
+
+    lookThru camera1;
+
+    auto_launch();
+
+	setAttr "defaultRenderGlobals.currentRenderer" -type "string" "FireRender";
+	setAttr "defaultRenderGlobals.imageFormat" 8;
+	setAttr "RadeonProRenderGlobals.completionCriteriaIterations" $rpr_iter;
+
+	rpr_render($scene);
+}}
+
+global proc main(){{
+
+	setProject ("{res_path}");
+
+	// <-- fail -->
+
+	// <-- start -->
+
+    {tests}
+
+    // <-- end -->
+
+	evalDeferred("quit -abort");
+
+}}
+
+
