@@ -1,6 +1,6 @@
 [
   {"name": "LightEnv.ma", "status": "active"},
-  {"name": "LightEnv1.ma", "status": ""},
-  {"name": "LightEnv2.ma", "status": ""},
-  {"name": "LightEnv3.ma", "status": ""}
+  {"name": "LightEnv1.ma", "status": "active"},
+  {"name": "LightEnv2.ma", "status": "active"},
+  {"name": "LightEnv3.ma", "status": "active"}
 ]

@@ -39,6 +39,30 @@ global proc prerender(string $scene, int $rpr_iter){{
 	setAttr "RadeonProRenderGlobals.completionCriteriaIterations" $rpr_iter;
 
 	rpr_render($scene);
+
+	string $render_device_name[] = `optionVar -q "RPR_DevicesName"`;
+
+    string $filePath = "{work_dir}" + "/" + $scene + "_RPR.json";
+	int $fileID = `fopen $filePath "a"`;
+	fprint $fileID ("[");
+	fprint $fileID ("\r\n {{");
+	fprint $fileID ("\r\n  \"render_device\": \"" + $render_device_name[0] + "\",");
+	fprint $fileID ("\r\n  \"tool\": \"Maya " + `about -version` + "\",");
+	fprint $fileID ("\r\n  \"date_time\": \"" + `date -format "DD/MM/YYYY hh:mm:ss"` + "\",");
+	fprint $fileID ("\r\n  \"render_version\": \"" + getRPRPluginVersion() + "\",");
+	fprint $fileID ("\r\n  \"core_version\": \"" + getRprCoreVersion() + "\",");
+	fprint $fileID ("\r\n  \"file_name\": \"" + "converted_" + $scene + ".jpg\",");
+	fprint $fileID ("\r\n  \"render_color_path\": \"Color/converted_" + $scene + ".jpg\",");
+	fprint $fileID ("\r\n  \"baseline_color_path\": \"Color/" + $scene + ".jpg\",");
+	fprint $fileID ("\r\n  \"scene_name\": \"" + $scene + "\",");
+	fprint $fileID ("\r\n  \"render_time\": 1,");
+	fprint $fileID ("\r\n  \"test_case\": \"" + $scene + "\",");
+	fprint $fileID ("\r\n  \"difference_color\": \"" + "not compared yet" + "\",");
+	fprint $fileID ("\r\n  \"test_status\": \"" + "passed" + "\"");
+	fprint $fileID ("\r\n }}");
+	fprint $fileID ("\r\n]");
+	fclose $fileID;
+
 }}
 
 global proc main(){{
