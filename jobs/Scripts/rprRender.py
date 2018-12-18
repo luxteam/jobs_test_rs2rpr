@@ -67,7 +67,7 @@ def main():
     cmd_script = '''
     set MAYA_CMD_FILE_OUTPUT=%cd%/renderTool.log
     set MAYA_SCRIPT_PATH=%cd%;%MAYA_SCRIPT_PATH%
-    "{}" -command "source script.mel; evalDeferred -lp \\"main()\\";"'''.format(args.render_path)
+    "{}" -command "global int $manual = 1; source script.mel; evalDeferred -lp \\"main()\\";"'''.format(args.render_path)
 
     cmd_script_path = os.path.join(args.output_dir, 'renderRPR.bat')
 
