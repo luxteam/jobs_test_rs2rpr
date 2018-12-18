@@ -64,19 +64,16 @@ def main():
 
     shutil.copyfile(os.path.join(os.path.dirname(__file__), 'convertRS2RPR.mel'), os.path.join(args.output_dir, 'convertRS2RPR.mel'))
 
-    cmd_script = """
-    set MAYA_CMD_FILE_OUTPUT=%cd%/renderTool.log 
-	set MAYA_SCRIPT_PATH=%cd%;%MAYA_SCRIPT_PATH%
-	"{}" -command "source script.mel; evalDeferred -lp (main());"
-    """.format(args.render_path)
+    cmd_script = '''
+    set MAYA_CMD_FILE_OUTPUT=%cd%/renderTool.log
+    set MAYA_SCRIPT_PATH=%cd%;%MAYA_SCRIPT_PATH%
+    "{}" -command "source script.mel; evalDeferred -lp \\"main()\\";"'''.format(args.render_path)
 
     cmd_script_path = os.path.join(args.output_dir, 'renderRPR.bat')
 
     try:
         with open(cmd_script_path, 'w') as file:
             file.write(cmd_script)
-        # with open(args.render_log_path, 'w') as file:
-        #     pass
     except OSError as err:
         main_logger.error(str(err))
         return 1
@@ -105,6 +102,11 @@ def main():
             else:
                 break
 
+        for test in tests_list:
+            if test['status'] == 'active':
+                conversion_log_path = os.path.join(args.scene_path, test['name'] + '.log')
+                if os.path.exists(conversion_log_path):
+                    shutil.copyfile(conversion_log_path, os.path.join(args.output_dir, test['name'] + '.conversion.log'))
         return rc
 
 
