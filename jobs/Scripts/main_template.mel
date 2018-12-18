@@ -5,6 +5,10 @@ global proc rpr_render(string $scene){{
 	optionVar -rm "RPR_DevicesSelected";
 	optionVar -iva "RPR_DevicesSelected" 1;
 
+	if ( catch (`setAttr "cameraShape1.focalLength" 52.3`)) {{
+        print "no camera1";
+    }}
+
 	fireRender -waitForItTwo;
 	renderIntoNewWindow render;
 	sysFile -makeDir ("{work_dir}" + "/Color");
