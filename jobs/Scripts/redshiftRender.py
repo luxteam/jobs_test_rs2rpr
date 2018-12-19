@@ -37,8 +37,12 @@ def main():
     for test in tests_list:
         if test['status'] == 'active':
             render_log_path = os.path.join(args.output_dir, test['name'] + '.rs.log')
-            cmd_script = '"{}" -r redshift -log {} -rd "{}" -im {} -of {} "{}"'\
-                .format(args.render_path, render_log_path, args.output_img_dir, os.path.join(args.output_img_dir, test['name']), args.output_file_ext, os.path.join(args.scene_path, test['name']))
+            scenes_without_camera1 = ['Bump', 'BumpBlender', 'Displacement', 'DisplacementBlender', 'Fresnel', 'Normal', 'CarPaint', 'Incandescent', 'SubsurfaceScatter', 'AmbientOcclusion', 'CameraMap', 'Noise', 'ColorLayer']
+            use_camera1 = " -cam camera1"
+            if os.path.basename(args.output_dir) in scenes_without_camera1:
+                use_camera1 = ""
+            cmd_script = '"{}" -r redshift -log {} -rd "{}" -im {} -of {}{} "{}"'\
+                .format(args.render_path, render_log_path, args.output_img_dir, os.path.join(args.output_img_dir, test['name']), args.output_file_ext, use_camera1, os.path.join(args.scene_path, test['name']))
             cmd_script_path = os.path.join(args.output_dir, test['name'] + '.renderRedshift.bat')
 
             try:

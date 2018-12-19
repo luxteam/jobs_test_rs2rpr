@@ -5,7 +5,7 @@ global proc rpr_render(string $scene){{
 	optionVar -rm "RPR_DevicesSelected";
 	optionVar -iva "RPR_DevicesSelected" 1;
 
-	if ( catch (`setAttr "cameraShape1.focalLength" 52.3`)) {{
+	if ( catch (`lookThru camera1`)) {{
         print "no camera1";
     }}
 
