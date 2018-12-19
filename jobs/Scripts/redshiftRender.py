@@ -39,7 +39,7 @@ def main():
             render_log_path = os.path.join(args.output_dir, test['name'] + '.rs.log')
             cmd_script = '"{}" -r redshift -log {} -rd "{}" -im {} -of {} "{}"'\
                 .format(args.render_path, render_log_path, args.output_img_dir, os.path.join(args.output_img_dir, test['name']), args.output_file_ext, os.path.join(args.scene_path, test['name']))
-            cmd_script_path = os.path.join(args.output_dir, test['name'] + 'renderRedshift.bat')
+            cmd_script_path = os.path.join(args.output_dir, test['name'] + '.renderRedshift.bat')
 
             try:
                 with open(cmd_script_path, 'w') as file:
@@ -47,8 +47,7 @@ def main():
                 with open(render_log_path, 'w') as file:
                     pass
             except OSError as err:
-                main_logger.error(str(err))
-                # return 1
+                main_logger.error("Error while saving bat: {}".format(str(err)))
             else:
                 rc = -1
                 os.chdir(args.output_dir)
@@ -58,13 +57,13 @@ def main():
                 try:
                     rc = p.wait()
                 except psutil.TimeoutExpired as err:
-                    main_logger.error("Terminated by timeout")
+                    main_logger.error("Terminated by simple render. {}".format(str(err)))
                     rc = -1
                     for child in reversed(p.children(recursive=True)):
                         child.terminate()
                     p.terminate()
                 # return rc
-
+    return 0
 
 if __name__ == "__main__":
     exit(main())
