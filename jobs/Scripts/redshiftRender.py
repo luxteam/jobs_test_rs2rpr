@@ -3,7 +3,6 @@ import sys
 import os
 import subprocess
 import psutil
-import datetime
 import json
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir)))
 from jobs_launcher.core.config import main_logger
@@ -41,7 +40,7 @@ def main():
             use_camera1 = " -cam camera1"
             if os.path.basename(args.output_dir) in scenes_without_camera1:
                 use_camera1 = ""
-            cmd_script = '"{}" -r redshift -log {} -rd "{}" -im {} -of {}{} "{}"'\
+            cmd_script = '"{}" -r redshift -log {} -rd "{}" -im "{}" -of {}{} "{}"'\
                 .format(args.render_path, render_log_path, args.output_img_dir, os.path.join(args.output_img_dir, test['name']), args.output_file_ext, use_camera1, os.path.join(args.scene_path, test['name']))
             cmd_script_path = os.path.join(args.output_dir, test['name'] + '.renderRedshift.bat')
 
@@ -68,6 +67,7 @@ def main():
                     p.terminate()
                 # return rc
     return 0
+
 
 if __name__ == "__main__":
     exit(main())
