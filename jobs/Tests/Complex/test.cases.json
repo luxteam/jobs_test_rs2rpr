@@ -1,5 +1,6 @@
 [
   {"name": "01_tank.ma", "status": "active"},
-  {"name": "EvermotionToRedshift_001.ma", "status": "in progress"},
-  {"name": "01_Louboutin_RS.mb", "status": "in progress"}
+  {"name": "EvermotionToRedshift_001.ma", "status": "active"},
+  {"name": "01_Louboutin_RS.ma", "status": "active"},
+  {"name": "Gun.ma", "status": "active"}
 ]
