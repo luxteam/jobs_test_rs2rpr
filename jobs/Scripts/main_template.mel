@@ -1,4 +1,3 @@
-source convertRS2RPR.mel;
 
 global proc rpr_render(string $scene){{
 
