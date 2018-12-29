@@ -62,10 +62,11 @@ def main():
     with open(os.path.join(args.output_dir, 'script.mel'), 'w') as file:
         file.write(mel_script)
 
-    shutil.copyfile(os.path.join(os.path.dirname(__file__), 'convertRS2RPR.mel'), os.path.join(args.output_dir, 'convertRS2RPR.mel'))
+    shutil.copyfile(os.path.join(os.path.dirname(__file__), 'convertRS2RPR.py'), os.path.join(args.output_dir, 'convertRS2RPR.py'))
 
     cmd_script = '''
     set MAYA_CMD_FILE_OUTPUT=%cd%/renderTool.log
+    set PYTHONPATH=%cd%;PYTHONPATH
     set MAYA_SCRIPT_PATH=%cd%;%MAYA_SCRIPT_PATH%
     "{}" -command "global int $manual = 1; source script.mel; evalDeferred -lp \\"main()\\";"'''.format(args.render_path)
 
