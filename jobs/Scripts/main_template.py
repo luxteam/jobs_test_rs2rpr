@@ -95,7 +95,7 @@ def prerender(scene, rpr_iter):
 	report['test_status'] = "passed"
 
 	with open(filePath, 'w') as file:
-		json.dump([report], file)
+		json.dump([report], file, indent=4)
 
 
 
