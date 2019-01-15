@@ -1,4 +1,3 @@
-source convertRS2RPR.mel;
 
 global proc rpr_render(string $scene){{
 
@@ -65,7 +64,7 @@ global proc prerender(string $scene, int $rpr_iter){{
         loadPlugin redshift4maya;
     }}
 
-    auto_launch();
+    python("import convertRS2RPR; convertRS2RPR.auto_launch()")
     print "Conversion finished.\n";
 
     setAttr "defaultRenderGlobals.currentRenderer" -type "string" "FireRender";

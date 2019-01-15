@@ -48,26 +48,28 @@ def main():
     args = createArgsParser()
 
     tests_list = {}
-    tests = ""
+    
     with open(args.tests_list, 'r') as file:
         tests_list = json.loads(file.read())
 
+    tests = []
     for test in tests_list:
         if test['status'] == 'active':
-            tests += """prerender("{}", 300);\n""".format(test['name'])
+            tests.append(test['name'])
 
-    with open(os.path.join(os.path.dirname(__file__), 'main_template.mel'), 'r') as file:
-        mel_script = file.read().format(tests=tests, work_dir=args.output_dir.replace('\\', '/'), res_path=args.scene_path.replace('\\', '/'))
+    with open(os.path.join(os.path.dirname(__file__), 'main_template.py'), 'r') as file:
+        py_script = file.read().format(tests=tests, work_dir=args.output_dir.replace('\\', '/'), res_path=args.scene_path.replace('\\', '/'))
 
-    with open(os.path.join(args.output_dir, 'script.mel'), 'w') as file:
-        file.write(mel_script)
+    with open(os.path.join(args.output_dir, 'script.py'), 'w') as file:
+        file.write(py_script)
 
-    shutil.copyfile(os.path.join(os.path.dirname(__file__), 'convertRS2RPR.mel'), os.path.join(args.output_dir, 'convertRS2RPR.mel'))
+    shutil.copyfile(os.path.join(os.path.dirname(__file__), 'convertRS2RPR.py'), os.path.join(args.output_dir, 'convertRS2RPR.py'))
 
     cmd_script = '''
     set MAYA_CMD_FILE_OUTPUT=%cd%/renderTool.log
+    set PYTHONPATH=%cd%;PYTHONPATH
     set MAYA_SCRIPT_PATH=%cd%;%MAYA_SCRIPT_PATH%
-    "{}" -command "global int $manual = 1; source script.mel; evalDeferred -lp \\"main()\\";"'''.format(args.render_path)
+    "{}" -command "python(\\"import script as converter\\"); python(\\"converter.main()\\");" '''.format(args.render_path)
 
     cmd_script_path = os.path.join(args.output_dir, 'renderRPR.bat')
 
