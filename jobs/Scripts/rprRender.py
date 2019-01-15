@@ -61,7 +61,7 @@ def main():
         py_script = file.read().format(tests=tests, work_dir=args.output_dir.replace('\\', '/'), res_path=args.scene_path.replace('\\', '/'))
 
     with open(os.path.join(args.output_dir, 'script.py'), 'w') as file:
-        file.write(mel_script)
+        file.write(py_script)
 
     shutil.copyfile(os.path.join(os.path.dirname(__file__), 'convertRS2RPR.py'), os.path.join(args.output_dir, 'convertRS2RPR.py'))
 
