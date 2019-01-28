@@ -3,7 +3,7 @@
 
     <outpath value="{OutputDir}"/>
 
-    <execute command='python "{ResourcesDir}\\redshiftRender.py"' timeout="1700">
+    <execute command='python "{ResourcesDir}\\redshiftRender.py"' timeout="7000">
         <argument>--tests_list "{Root}\\Tests\\Complex\\test.cases.json"</argument>
         <argument>--render_path "{Tool}\Render.exe"</argument>
         <argument>--scene_path "{ScenesDir}\\Complex"</argument>
@@ -12,7 +12,7 @@
         <argument>--output_file_ext jpg</argument>
     </execute>
 
-    <execute command='python "{ResourcesDir}\\rprRender.py"' timeout="1700">
+    <execute command='python "{ResourcesDir}\\rprRender.py"' timeout="6000">
         <argument>--tests_list "{Root}\\Tests\\Complex\\test.cases.json"</argument>
         <argument>--render_path "{Tool}\Maya.exe"</argument>
         <argument>--scene_path "{ScenesDir}\\Complex"</argument>

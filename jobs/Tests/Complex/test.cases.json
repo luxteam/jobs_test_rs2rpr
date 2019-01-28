@@ -7,13 +7,13 @@
     {"name": "07_Louboutin_RS.ma", "status": "active"},
     {"name": "08_MiniRoom.ma", "status": "active"},
     {"name": "09_rs_materialTest.ma", "status": "active"},
-    {"name": "10_AllShaders_RS.ma", "status": "active0"},
-    {"name": "11_LightAreaVariants.ma", "status": "active0"},
-    {"name": "12_LightPhysTypes.ma", "status": "active0"},
-    {"name": "13_LightUnits.ma", "status": "active0"},
-    {"name": "14_Lights_All_Types.ma", "status": "active0"},
-    {"name": "15_Unconvertable1.ma", "status": "active0"},
-    {"name": "16_AlienScene.ma", "status": "active0"},
-    {"name": "17_test_full_scenes_RS_FINAL.ma", "status": "active0"},
-    {"name": "18_TropicOpacity.ma", "status": "active0"}
+    {"name": "10_AllShaders_RS.ma", "status": "active"},
+    {"name": "11_LightAreaVariants.ma", "status": "active"},
+    {"name": "12_LightPhysTypes.ma", "status": "active"},
+    {"name": "13_LightUnits.ma", "status": "active"},
+    {"name": "14_Lights_All_Types.ma", "status": "active"},
+    {"name": "15_Unconvertable1.ma", "status": "active"},
+    {"name": "16_AlienScene.ma", "status": "active"},
+    {"name": "17_test_full_scenes_RS_FINAL.ma", "status": "active"},
+    {"name": "18_TropicOpacity.ma", "status": "active"}
 ]
