@@ -1,7 +1,7 @@
 [
     {"name": "01_EvermotionToRedshift.ma", "status": "active"},
     {"name": "02_tank.ma", "status": "active"},
-    {"name": "03_RedshiftCar_opt.ma", "status": "active"},
+    {"name": "03_RedshiftCar_opt.ma", "status": ""},
     {"name": "04_Gun.ma", "status": "active"},
     {"name": "05_Redshift_IntroToCameras.ma", "status": "active"},
     {"name": "06_Redshift_IntroToCameras.ma", "status": "active"},
