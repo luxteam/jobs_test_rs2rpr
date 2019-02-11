@@ -40,8 +40,8 @@ def main():
             use_camera1 = " -cam camera1"
             if os.path.basename(args.output_dir) in scenes_without_camera1:
                 use_camera1 = ""
-            cmd_script = '"{}" -r redshift -log {} -rd "{}" -im "{}" -of {}{} "{}"'\
-                .format(args.render_path, render_log_path, args.output_img_dir, os.path.join(args.output_img_dir, test['name']), args.output_file_ext, use_camera1, os.path.join(args.scene_path, test['name']))
+            cmd_script = '"{}" -r redshift -proj "{}" -log {} -rd "{}" -im "{}" -of {}{} "{}"'\
+                .format(args.render_path, args.scene_path, render_log_path, args.output_img_dir, os.path.join(args.output_img_dir, test['name']), args.output_file_ext, use_camera1, os.path.join(args.scene_path, test['name']))
             cmd_script_path = os.path.join(args.output_dir, test['name'] + '.renderRedshift.bat')
 
             try:
