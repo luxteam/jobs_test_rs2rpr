@@ -121,7 +121,7 @@ def prerender(scene, rpr_iter):
 		except ZeroDivisionError:
 			return 0
 
-	report['difference_color'] = get_diff(report['render_time'], report['baseline_render_time'])
+	report['difference_time'] = get_diff(report['render_time'], report['baseline_render_time'])
 
 	with open(filePath, 'w') as file:
 		json.dump([report], file, indent=4)
