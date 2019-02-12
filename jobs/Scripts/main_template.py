@@ -59,11 +59,11 @@ def get_or_render_time(scene_name):
 				time_s = line.split(": ")[-1]
 
 				try:
-					x = time.strptime(time_s.replace('\n', ''), '%S.%fs')
+					x = datetime.datetime.strptime(time_s.replace('\n', '').replace('\r', ''), '%S.%fs')
 				except ValueError:
-					x = datetime.datetime.strptime(time_s.replace('\n', ''), '%Mm:%Ss')
+					x = datetime.datetime.strptime(time_s.replace('\n', '').replace('\r', ''), '%Mm:%Ss')
 
-				return x.second + x.minute * 60 + x.microsecond / 1000000
+				return float(x.second + x.minute * 60 + float(x.microsecond / 1000000))
 
 
 def prerender(scene, rpr_iter):
@@ -94,7 +94,7 @@ def prerender(scene, rpr_iter):
 	start_time = datetime.datetime.now()
 	rpr_render(scene);
 	end_time = datetime.datetime.now()
-	print "Render finished. Render time: {}\n".format((end_time - start_time).total_seconds());
+	print "Render finished. Render time: {{}}\n".format((end_time - start_time).total_seconds());
 
 	filePath = "{work_dir}" + "/" + scene + "_RPR.json"
 	report = {{}}
@@ -111,7 +111,17 @@ def prerender(scene, rpr_iter):
 	report['test_case'] = scene
 	report['difference_color'] = "not compared yet"
 	report['test_status'] = "passed"
-	report['original_render_time'] = get_or_render_time(scene)
+	report['baseline_render_time'] = get_or_render_time(scene)
+
+	def get_diff(new, old):
+		if new == old:
+			return 0.0
+		try:
+			return (new - old) / old* 100.0
+		except ZeroDivisionError:
+			return 0
+
+	report['difference_color'] = get_diff(report['render_time'], report['baseline_render_time'])
 
 	with open(filePath, 'w') as file:
 		json.dump([report], file, indent=4)
