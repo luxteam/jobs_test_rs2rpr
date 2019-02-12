@@ -5,6 +5,7 @@ import maya.mel as mel
 import convertRS2RPR
 import datetime
 import json
+import time
 
 def rpr_render(scene):
 
@@ -50,6 +51,21 @@ def rpr_render(scene):
 	cmds.renderWindowEditor("renderView", edit=True, dst="color")
 	cmds.renderWindowEditor("renderView", edit=True, com=True, writeImage=output)
 
+
+def get_or_render_time(scene_name):
+	with open(scene_name + ".rs.log", 'r') as file:
+		for line in file.readlines():
+			if "[Redshift] Rendering done - total time for 1 frames:" in line:
+				time_s = line.split(": ")[-1]
+
+				try:
+					x = time.strptime(time_s.replace('\n', ''), '%S.%fs')
+				except ValueError:
+					x = datetime.datetime.strptime(time_s.replace('\n', ''), '%Mm:%Ss')
+
+				return x.second + x.minute * 60 + x.microsecond / 1000000
+
+
 def prerender(scene, rpr_iter):
 
 	scene_name  = cmds.file(q=True, sn=True, shn=True)
@@ -75,8 +91,10 @@ def prerender(scene, rpr_iter):
 	cmds.setAttr("defaultRenderGlobals.imageFormat", 8)
 	cmds.setAttr("RadeonProRenderGlobals.completionCriteriaIterations", rpr_iter)
 
+	start_time = datetime.datetime.now()
 	rpr_render(scene);
-	print "Render finished.\n";
+	end_time = datetime.datetime.now()
+	print "Render finished. Render time: {}\n".format((end_time - start_time).total_seconds());
 
 	filePath = "{work_dir}" + "/" + scene + "_RPR.json"
 	report = {{}}
@@ -89,10 +107,11 @@ def prerender(scene, rpr_iter):
 	report['render_color_path'] = "Color/converted_" + scene + ".jpg"
 	report['baseline_color_path'] = "Color/" + scene + ".jpg"
 	report['scene_name'] = scene
-	report['render_time'] = 1
+	report['render_time'] = (end_time - start_time).total_seconds()
 	report['test_case'] = scene
 	report['difference_color'] = "not compared yet"
 	report['test_status'] = "passed"
+	report['original_render_time'] = get_or_render_time(scene)
 
 	with open(filePath, 'w') as file:
 		json.dump([report], file, indent=4)
