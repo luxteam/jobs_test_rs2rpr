@@ -66,6 +66,7 @@ def get_or_render_time(scene_name):
 					x = datetime.datetime.strptime(time_s.replace('\n', '').replace('\r', ''), '%S.%fs')
 				except ValueError:
 					x = datetime.datetime.strptime(time_s.replace('\n', '').replace('\r', ''), '%Mm:%Ss')
+				# 	TODO: proceed H:M:S
 
 				return float(x.second + x.minute * 60 + float(x.microsecond / 1000000))
 
