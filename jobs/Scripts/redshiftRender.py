@@ -94,7 +94,7 @@ def main():
                     p.terminate()
                 # return rc
                 if rc == 0:
-                    test['render_time'] = get_or_render_time(test['original_render_log'])
+                    case_report['render_time'] = get_or_render_time(case_report['original_render_log'])
                     with open(os.path.join(args.output_dir, test['name'] + '_RS.json'), 'w') as file:
                         json.dump([case_report], file, indent=4)
     return 0
