@@ -49,8 +49,8 @@ def main():
 
     tests_list = {}
 
-    if not os.path.exists(args.output_dir):
-        os.makedirs(args.output_dir)
+    if not os.path.exists(args.output_img_dir):
+        os.makedirs(args.output_img_dir)
     
     with open(args.tests_list, 'r') as file:
         tests_list = json.loads(file.read())
