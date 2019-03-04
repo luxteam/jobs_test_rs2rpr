@@ -17,7 +17,7 @@
         <argument>--render_path "{Tool}\Maya.exe"</argument>
         <argument>--scene_path "{ScenesDir}\\Environment"</argument>
         <argument>--output_dir "{OutputDir}"</argument>
-        <argument>--output_img_dir "{OutputDir}"</argument>
+        <argument>--output_img_dir "{OutputDir}/Color"</argument>
         <argument>--output_file_ext png</argument>
     </execute>
 

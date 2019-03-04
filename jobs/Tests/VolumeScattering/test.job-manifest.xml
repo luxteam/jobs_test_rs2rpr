@@ -17,12 +17,18 @@
         <argument>--render_path "{Tool}\Maya.exe"</argument>
         <argument>--scene_path "{ScenesDir}\\VolumeScattering"</argument>
         <argument>--output_dir "{OutputDir}"</argument>
-        <argument>--output_img_dir "{OutputDir}"</argument>
+        <argument>--output_img_dir "{OutputDir}/Color"</argument>
         <argument>--output_file_ext png</argument>
     </execute>
 
     <execute command='python "{CWD}/Scripts/make_report_json.py"'>
         <argument>--work_dir "{OutputDir}"</argument>
+    </execute>
+
+    <execute command='python "{CommonDir}/scripts/ImageComparator/compareByJSON.py"'>
+        <argument>--work_dir "{OutputDir}"</argument>
+        <argument>--base_dir "{BaselineDir}/VolumeScattering"</argument>
+        <argument>--case_suffix _RS.json</argument>
     </execute>
 
 </job-manifest>
