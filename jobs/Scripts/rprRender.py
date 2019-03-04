@@ -48,6 +48,9 @@ def main():
     args = createArgsParser()
 
     tests_list = {}
+
+    if not os.path.exists(args.output_dir):
+        os.makedirs(args.output_dir)
     
     with open(args.tests_list, 'r') as file:
         tests_list = json.loads(file.read())

@@ -1,11 +1,10 @@
-
 import os
 import maya.cmds as cmds
 import maya.mel as mel
 import convertRS2RPR
 import datetime
 import json
-import time
+
 
 def rpr_render(scene):
 
@@ -56,21 +55,6 @@ def rpr_render(scene):
 	return (end_time - start_time).total_seconds()
 
 
-def get_or_render_time(scene_name):
-	with open(scene_name + ".rs.log", 'r') as file:
-		for line in file.readlines():
-			if "[Redshift] Rendering done - total time for 1 frames:" in line:
-				time_s = line.split(": ")[-1]
-
-				try:
-					x = datetime.datetime.strptime(time_s.replace('\n', '').replace('\r', ''), '%S.%fs')
-				except ValueError:
-					x = datetime.datetime.strptime(time_s.replace('\n', '').replace('\r', ''), '%Mm:%Ss')
-				# 	TODO: proceed H:M:S
-
-				return float(x.second + x.minute * 60 + float(x.microsecond / 1000000))
-
-
 def prerender(scene, rpr_iter):
 
 	scene_name  = cmds.file(q=True, sn=True, shn=True)
@@ -96,7 +80,6 @@ def prerender(scene, rpr_iter):
 	cmds.setAttr("defaultRenderGlobals.imageFormat", 8)
 	cmds.setAttr("RadeonProRenderGlobals.completionCriteriaIterations", rpr_iter)
 
-
 	render_time = rpr_render(scene)
 
 	print "Render finished. Render time: {{}}\n".format(render_time);
@@ -116,21 +99,9 @@ def prerender(scene, rpr_iter):
 	report['test_case'] = scene
 	report['difference_color'] = "not compared yet"
 	report['test_status'] = "passed"
-	report['baseline_render_time'] = get_or_render_time(scene)
-
-	def get_diff(new, old):
-		if new == old:
-			return 0.0
-		try:
-			return (new - old) / old* 100.0
-		except ZeroDivisionError:
-			return 0
-
-	report['difference_time'] = get_diff(report['render_time'], report['baseline_render_time'])
 
 	with open(filePath, 'w') as file:
 		json.dump([report], file, indent=4)
-
 
 
 def main():
@@ -140,5 +111,3 @@ def main():
 	for each in tests:
 		prerender(each, 300)
 	cmds.evalDeferred(cmds.quit(abort=True))
-
-   
