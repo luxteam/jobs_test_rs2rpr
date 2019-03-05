@@ -11,6 +11,9 @@ directory = args.work_dir
 
 files = os.listdir(directory)
 json_files = list(filter(lambda x: x.endswith('RPR.json'), files))
+# build report.json if was launched render_or.bat
+if not json_files:
+    json_files = list(filter(lambda x: x.endswith('RS.json'), files))
 result_json = ""
 
 for file in range(len(json_files)):
@@ -46,5 +49,5 @@ for file in range(len(json_files)):
         text = text + "," + "\r\n"
         result_json += text
 
-with open(os.path.join(directory, "report_compare.json"), 'w') as file:
+with open(os.path.join(directory, "report.json"), 'w') as file:
     file.write(result_json)
