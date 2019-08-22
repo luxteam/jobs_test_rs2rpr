@@ -16,5 +16,7 @@
     {"name": "15_Unconvertable1.ma", "status": "active"},
     {"name": "16_AlienScene.ma", "status": "active"},
     {"name": "17_test_full_scenes_RS_FINAL.ma", "status": "active"},
-    {"name": "18_TropicOpacity.ma", "status": "active"}
+    {"name": "18_TropicOpacity.ma", "status": "active"},
+    {"name": "19_SubsurfaceMaterialTest.ma", "status": "active"},
+    {"name": "20_SkinTest.ma", "status": "active"}
 ]
