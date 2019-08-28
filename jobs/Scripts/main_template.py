@@ -28,7 +28,8 @@ def rpr_render(scene):
 	cameras = cmds.ls(cameras=True)
 	if ("cameraShape1" in cameras):
 		mel.eval("lookThru camera1")
-		for each in scenes_cam_fix_1: 
+		'''
+        for each in scenes_cam_fix_1: 
 			if each == scene:
 				try:
 					cmds.setAttr("cameraShape1.focalLength", 52.3)
@@ -40,9 +41,10 @@ def rpr_render(scene):
 					cmds.setAttr("cameraShape1.focalLength", 36)
 				except:
 					print "[ERROR]: Can't set focalLength\n";
+        '''
 	else:
 		print "[ERROR]: no camera1\n";
-
+	
 	cmds.fireRender(waitForItTwo=True)
 
 	start_time = datetime.datetime.now()
