@@ -3,7 +3,7 @@
 
     <outpath value="{OutputDir}"/>
 
-    <execute command='python "{ResourcesDir}\\redshiftRender.py"' timeout="20000">
+    <execute command='python "{ResourcesDir}\\redshiftRender.py"' timeout="10000">
         <argument>--tests_list "{Root}\\Tests\\Complex\\test.cases.json"</argument>
         <argument>--render_path "{Tool}\Render.exe"</argument>
         <argument>--scene_path "{ScenesDir}\\Complex"</argument>
